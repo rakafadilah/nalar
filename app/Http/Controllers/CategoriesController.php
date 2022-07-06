@@ -45,6 +45,7 @@ class CategoriesController extends Controller
         $cat = new Categories ;
         $cat->name = $request->get('name');
         $cat->slug = Str::slug($request->get('name'));
+        $cat->deskripsi = $request->get('deskripsi');
         $cat->save();
 
         return redirect()->route('categories.index');

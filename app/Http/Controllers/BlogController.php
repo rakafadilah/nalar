@@ -42,6 +42,17 @@ class BlogController extends Controller
         $blog = new Blog ;
         $blog->name = $request->get('name');
         $blog->slug = Str::slug($request->get('name'));
+        $blog->content = $request->get('content');
+        
+        $blog->tags_id = $request->get('tags_id');
+        $blog->categories_id = $request->get('categories_id');
+
+        // cara save image ke database
+        if($request->file('image')) {
+            $file=$request->file('image');
+            $blog->image = $file;
+        }
+        
         $blog->save();
 
         return redirect()->route('blog.index');

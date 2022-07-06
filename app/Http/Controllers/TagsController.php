@@ -53,7 +53,7 @@ class TagsController extends Controller
         $tag->slug = Str::slug($request->get('name'));
         // setelah field terisi lakukan save untuk menyimpan kedalam table
         $tag->save();
-        // setelah save selesai kembalikan halaman ke index dengan metode redirect 
+        // setelah save selesai redirect ke route index 
         return redirect()->route('tags.index');
     }
 
@@ -76,7 +76,12 @@ class TagsController extends Controller
      */
     public function edit($id)
     {
-        //
+        // cara mengambil data berdasarkan id menggunakan findOrFail
+        $tag= Tags::findOrFail($id);
+        // cara kirim variable ke edit view
+        return view('tags.edit', [
+            'tag'=> $tag
+        ]);
     }
 
     /**
@@ -88,7 +93,13 @@ class TagsController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        // cara update data dengan mengambil data berdasarkan id
+        $tag = Tags::findOrFail($id);
+        $tag->name = $request->get('name');
+        $tag->slug = Str::slug($request->get('name'));
+        $tag->save();
+
+        return redirect()->route('tags.index');
     }
 
     /**
@@ -99,6 +110,10 @@ class TagsController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $tag = Tags::findOrFail($id);
+        // cara menghapus 1 row data
+        $tag->delete();
+        
+        return redirect()->route('tags.index');
     }
 }
