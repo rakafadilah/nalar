@@ -70,7 +70,10 @@ class CategoriesController extends Controller
      */
     public function edit($id)
     {
-        //
+        $cat= Categories::findOrFail($id);
+        return view('categories.edit',[
+            'cat'=> $cat
+        ]);
     }
 
     /**
@@ -82,7 +85,15 @@ class CategoriesController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $cat= Categories::findOrFail($id);
+        $cat->name = $request->get('name');
+        $cat->slug = Str::slug($request->get('name'));
+        $cat->deskripsi = $request->get('deskripsi');
+        $cat->save();
+
+        return redirect()->route('categories.index');
+
+
     }
 
     /**
@@ -93,6 +104,9 @@ class CategoriesController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $cat= Categories::findOrFail($id);
+        $cat->delete();
+
+        return redirect()->route('categories.index');
     }
 }
