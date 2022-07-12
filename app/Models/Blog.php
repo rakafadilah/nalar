@@ -11,6 +11,22 @@ class Blog extends Model
     protected $table='blogs';
     public $timestamps=true;
     protected $fillable=[
-        'name','slug','content','image','tags_id','categories_id'
+        'title','slug','content','image','categories_id','users_id',
     ];
+
+    public function tags()
+    {
+        return $this->belongsToMany('App\Models\Tag');
+    }
+
+    public function users()
+    {
+        return $this->belongsTo('App\Models\User');
+    }
+
+    public function categories()
+    {
+        return $this->belongsTo('App\Models\Categories');
+    }
 }
+

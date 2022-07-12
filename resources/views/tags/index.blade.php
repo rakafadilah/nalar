@@ -14,28 +14,48 @@
                 </nav>
             </div>
         </div>
+    </div>
+</div>
+
+<div class="container-fluid">
+    <div class="row">
         <div class="col-md-12">
             <div class="card">
                 <div class="card-body">
                     <h4 class="card-title">Tags list</h4>
-        
+                    <div class="mb-3">
+                        <a href="{{route('tags.create')}}" class="btn btn-success"><i class="fa fa-plus"></i> Add</a>
+                    </div>
                     <div class="table-responsive">
-                        <table id="zero_config" class="table table-striped table-bordered display no-wrap" style="width:100%">
+                        <table id="zero_config" class="table table-borderless v-middle mb-0 no-wrap" style="width:100%">
                             <thead>
                                 <tr>
-                                    <th>No</th>
-                                    <th>Tags name</th>
-                                    <th>Action</th>
+                                    <th class="font-14 font-weight-medium text-muted">No</th>
+                                    <th class="font-14 font-weight-medium text-muted">Tags name</th>
+                                    <th class="font-14 font-weight-medium text-muted">Action</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <!-- melakukan perulangan dalam blade tamplate menggunakan foreach -->
                                 @foreach($tags as $key=>$tag)
                                 <tr>
-                                    <td>{{ $key+1 }}</td>
-                                    <td>{{ $tag->name}}</td>
-                                    <td>
-                                        
+                                    <td class="border-top-0 px-2 py-4">{{ $key+1 }}</td>
+                                    <td class="border-top-0 px-2 py-4">{{ $tag->name}}</td>
+                                    <td class="border-top-0 px-2 py-4">
+                                        <div class="popover-icon row">
+                                            <a class="btn btn-cyan rounded-circle btn-circle font-12 popover-itemb" 
+                                            href="{{route('tags.edit', $tag->id)}}"><i class="fas fa-edit"></i>
+                                            </a>
+                                            <form onsubmit="return confirm('Delete this?')"
+                                                 action="{{route('tags.destroy', $tag->id)}}"
+                                                 method="post">
+                                            @csrf  
+                                                <input type="hidden" name="_method" value="delete">
+                                                <button class="btn btn-danger rounded-circle btn-circle font-12 popover-item">
+                                                    <i class="far fa-trash-alt"></i>
+                                                </button>
+                                            </form>
+                                        </div>
                                     </td>
                                 </tr>
                                 @endforeach

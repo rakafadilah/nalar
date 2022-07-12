@@ -19,6 +19,6 @@ Route::get('/', function () {
 
 
 // route resource digunakan untuk memanggil semua function yang ada di controller yang ada di --resource 
-Route::resource('tags','App\Http\Controllers\TagsController');
+Route::resource('tags','App\Http\Controllers\TagController');
 Route::resource('categories','App\Http\Controllers\CategoriesController');
 Route::resource('blog','App\Http\controllers\BlogController');

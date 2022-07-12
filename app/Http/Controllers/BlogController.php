@@ -4,7 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Models\Blog;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
+use App\Models\Categories;
+use App\Models\Tag;
 
 class BlogController extends Controller
 {
@@ -28,7 +33,14 @@ class BlogController extends Controller
      */
     public function create()
     {
-        return view('blog.create');
+        // mengambil semua data categories dengan query categories all
+        $categories = Categories::all();
+        // mengambil semua data tags dengan query tags all
+        $tags = Tag::all();
+        return view('blog.create',[
+            'categories'=>$categories,
+            'tags'=>$tags
+        ]);
     }
 
     /**
@@ -39,23 +51,67 @@ class BlogController extends Controller
      */
     public function store(Request $request)
     {
+        // membuat validation untuk request form
+        $validation = Validator::make($request->all(),[
+            "title"=> "required",
+            "content"=>"required",
+            "image"=>"sometimes|image",
+            "categories_id"=>"required",
+        ])->validate();
+
         $blog = new Blog ;
-        $blog->name = $request->get('name');
-        $blog->slug = Str::slug($request->get('name'));
-        $blog->content = $request->get('content');
-        
-        $blog->tags_id = $request->get('tags_id');
+        $blog->title = $request->get('title');
+        $blog->slug = Str::slug($request->get('title'));
+        $blog->users_id = 1;
         $blog->categories_id = $request->get('categories_id');
+
+        // $blog->tags_id = $request->get('tags_id');
+        
 
         // cara save image ke database
         if($request->file('image')) {
-            $file=$request->file('image');
+            $file=$request->file('image')->store('blogs','public');
             $blog->image = $file;
         }
+        // cara meginput image yang ada dalam tinymce
+        // pertama ambil data dari request content
+        $content = $request->get('content');
+        $dom = new \DOMDocument();
+        // lakukan endcode dengan xml 
+        $dom->loadHtml($content, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
+        // ambil setiap element dengan tag img
+        $images = $dom ->getElementsByTagName('img');
+        // lakukan perulangan dari setiap img dan simpan 
+        foreach ($images as $k => $img) {
+            $image_64 = $img->getAttribute('src');
+            $extension = explode('/',explode(':', substr($image_64, 0, strpos($image_64, ';')))[1])[1];
+            $replace = substr($image_64, 0, strpos($image_64, ',')+1);
+            $image = str_replace($replace,'',$image_64);
+            $image = str_replace(' ','+',$image);
+            $imageName = Str::random(10).'.'.$extension;
+
+            Storage::disk('public')->put('blogs/'.$imageName, base64_decode($image));
+
+            $img->removeAttribute('src');
+            $src_path = asset('storage/blogs/'.$imageName);
+            $img->setAttribute('src',$src_path);
+        }
+
+        $konten = $dom->saveHTML();
+        // simpan konten yang sudah diubah
+        $blog->content = $konten;
         
         $blog->save();
+        //sinkronisasi multiple tag dari form ke database
+        //multiple tag dipecah dan diulang
+        $tagIds = [];
+        foreach($request->get('tags_id') as $tag)
+        {
+            $tagIds[] = $tag;
+        }
+        $blog->tags()->sync($tagIds);
 
-        return redirect()->route('blog.index');
+        return redirect()->route('blog.index')->with('success','success');
     }
 
     /**
@@ -78,8 +134,13 @@ class BlogController extends Controller
     public function edit($id)
     {
         $blog= Blog ::findOrFail($id);
+        $categories = Categories :: all();
+        $tags = Tag :: all();
         return view('blog.edit',[
-            'blog'=> $blog
+            'blog'=> $blog,
+            'categories'=>$categories,
+            'tags'=>$tags,
+            
         ]);
     }
 
@@ -92,21 +153,61 @@ class BlogController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $validation = Validator::make($request->all(),[
+            "title"=> "required",
+            "content"=>"required",
+            "image"=>"sometimes|image",
+            "categories_id"=>"required",
+        ])->validate();
+
         $blog= Blog ::findOrFail($id);
-        $blog->name = $request->get('name');
-        $blog->slug = Str::slug($request->get('name'));
-        $blog->content = $request->get('content');
-        
+        $blog->title = $request->get('title');
+        $blog->slug = Str::slug($request->get('title'));
+        $blog->users_id = Auth::id();
         $blog->tags_id = $request->get('tags_id');
         $blog->categories_id = $request->get('categories_id');
 
-
+        //cek apakah ada file di dalam post
         if($request->file('image')) {
-            $file=$request->file('image');
-            $blog->image = $file;
+            //jika terdapat file dan di dalam data juga sudah terdapat image maka hapus yang lama di ganti yang baru
+            if($blog->image && file_exists(storage_path('app/public/'.$blog->image))) {
+                Storage::delete('public/'.$blog->image);
+                $file = $request->file('image')->store('blogs','public');
+                $blog->image = $file;
+            //jika tidak ada image di dalam data maka input baru image nya 
+            } else {
+                $file = $request->file('image')->store('blogs','public');
+                $blog->image = $file;
+            }
+           
         }  
         
-        return redirect()->route('blog.index');
+        $content = $request->get('content');
+        $dom = new \DOMDocument();
+        $dom->loadHtml($content, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
+        $images = $dom ->getElementsByTagName('img');
+
+        foreach ($images as $k => $img) {
+            $image_64 = $img->getAttribute('src');
+            $extension = explode('/',explode(':', substr($image_64, 0, strpos($image_64, ';')))[1])[1];
+            $replace = substr($image_64, 0, strpos($image_64, ',')+1);
+            $image = str_replace($replace,'',$image_64);
+            $image = str_replace(' ','+',$image);
+            $imageName = Str::random(10).'.'.$extension;
+
+            Storage::disk('public')->put('blogs/'.$imageName, base64_decode($image));
+
+            $img->removeAttribute('src');
+            $src_path = asset('storage/blogs/'.$imageName);
+            $img->setAttribute('src',$src_path);
+        }
+
+        $konten = $dom->saveHTML();
+        $blog->content = $konten;
+
+        $blog->save();
+        
+        return redirect()->route('blog.index')->with('success','success');
     }   
     
 
@@ -119,6 +220,10 @@ class BlogController extends Controller
     public function destroy($id)
     {
         $blog= Blog ::findOrFail($id);
+        //jika terdapar image di dalam data maka hapus image tersebut
+        if($blog->image && file_exists(storage_path('app/public/'.$blog->image))) {
+            Storage::delete('public/'.$blog->image);
+        }
         $blog->delete();
 
         return redirect()->route('blog.index');

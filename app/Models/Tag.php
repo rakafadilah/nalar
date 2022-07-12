@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Tags extends Model
+class Tag extends Model
 {
     use HasFactory;
     // ini nama table
@@ -16,4 +16,13 @@ class Tags extends Model
     protected $fillable=[
         'name','slug'
     ];
+
+
+    //menambahkan relasi many to many
+
+    public function blogs(){
+        return $this->belongsToMany('App\Models\Blog');
+    }
+
+
 }

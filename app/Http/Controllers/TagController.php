@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Tags;
+use App\Models\Tag;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
-class TagsController extends Controller
+class TagController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -16,7 +16,7 @@ class TagsController extends Controller
     public function index()
     {
         // cara memanggil semua data tags
-        $tags = Tags::all(); 
+        $tags = Tag::all(); 
         
     
         // cara untuk mengirim variable ke view
@@ -46,7 +46,7 @@ class TagsController extends Controller
     public function store(Request $request)
     {
         // Create object dengan memanggil model
-        $tag = new Tags;
+        $tag = new Tag;
         // field name diisi dengan request name dari form create view
         $tag->name = $request->get('name');
         // field slug diisi dengan generate slug dari request name
@@ -77,7 +77,7 @@ class TagsController extends Controller
     public function edit($id)
     {
         // cara mengambil data berdasarkan id menggunakan findOrFail
-        $tag= Tags::findOrFail($id);
+        $tag= Tag::findOrFail($id);
         // cara kirim variable ke edit view
         return view('tags.edit', [
             'tag'=> $tag
@@ -94,7 +94,7 @@ class TagsController extends Controller
     public function update(Request $request, $id)
     {
         // cara update data dengan mengambil data berdasarkan id
-        $tag = Tags::findOrFail($id);
+        $tag = Tag::findOrFail($id);
         $tag->name = $request->get('name');
         $tag->slug = Str::slug($request->get('name'));
         $tag->save();
@@ -110,7 +110,7 @@ class TagsController extends Controller
      */
     public function destroy($id)
     {
-        $tag = Tags::findOrFail($id);
+        $tag = Tag::findOrFail($id);
         // cara menghapus 1 row data
         $tag->delete();
         

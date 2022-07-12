@@ -23,8 +23,8 @@ class CreateBlogsTable extends Migration
             $table->string('image');
             
             // ini cara menambahkan foreignkey kedalam database
-            $table->foreignId('tags_id')->index()->constrained()->cascadeOnDelete();
-            $table->foreignId('categories_id')->index()->constrained()->cascadeOnDelete();
+            $table->foreignId('users_id')->unsigned()->index()->constrained()->cascadeOnDelete()->cascadeOnUpdate();
+            $table->foreignId('categories_id')->unsigned()->index()->constrained()->cascadeOnDelete()->cascadeOnUpdate();
             
         });
     }

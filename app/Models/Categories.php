@@ -13,4 +13,10 @@ class Categories extends Model
     protected $fillable=[
         'name','slug','deskripsi'
     ];
+
+    //menambahkan relasi one to many
+    public function blogs()
+    {
+        return $this->hasMany('App\Models\Blog');
+    }
 }
