@@ -13,6 +13,18 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::get('/front', function () {
+    return view('frontend.dashboard.index');
+});
+
+Route::get('/blogs',function () {
+    return view('frontend.blog.index');
+});
+
+Route::get('/blogpost', function ()  {
+    return view('frontend.blog.post');
+});
+
 Route::get('/', function () {
     return view('dashboard.index');
 });
@@ -22,3 +34,4 @@ Route::get('/', function () {
 Route::resource('tags','App\Http\Controllers\TagController');
 Route::resource('categories','App\Http\Controllers\CategoriesController');
 Route::resource('blog','App\Http\controllers\BlogController');
+

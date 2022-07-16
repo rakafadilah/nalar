@@ -387,7 +387,7 @@
                                 <tr>
                                     <td class="px-2 py-4">
                                         <div class="d-flex no-block align-items-center">
-                                            <div class="mr-3"><img {{asset('backend/assets/images/users/widget-table-pic3.jpg')}}" alt="user" class="rounded-circle" width="45" height="45" /></div>
+                                            <div class="mr-3"><img src="{{asset('backend/assets/images/users/widget-table-pic3.jpg')}}" alt="user" class="rounded-circle" width="45" height="45" /></div>
                                             <div class="">
                                                 <h5 class="text-dark mb-0 font-16 font-weight-medium">Julian
                                                     Josephs

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Blog;
+use App\Models\BlogTag;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -133,13 +134,19 @@ class BlogController extends Controller
      */
     public function edit($id)
     {
-        $blog= Blog ::findOrFail($id);
-        $categories = Categories :: all();
-        $tags = Tag :: all();
+        $blog= Blog::findOrFail($id);
+        $categories = Categories::all();
+        $tags = Tag::all();
+        $blogtags = BlogTag::where('blog_id',$id)->get();
+        $blogtag =[];
+        foreach($blogtags as $bt){
+            $blogtag[] = $bt->tag_id;
+        }
         return view('blog.edit',[
             'blog'=> $blog,
             'categories'=>$categories,
             'tags'=>$tags,
+            'blogtag'=>$blogtag,
             
         ]);
     }
@@ -153,18 +160,18 @@ class BlogController extends Controller
      */
     public function update(Request $request, $id)
     {
+       
         $validation = Validator::make($request->all(),[
             "title"=> "required",
             "content"=>"required",
-            "image"=>"sometimes|image",
+            "image"=>"sometimes",
             "categories_id"=>"required",
-        ])->validate();
-
+        ])->validate(); 
+ 
         $blog= Blog ::findOrFail($id);
         $blog->title = $request->get('title');
         $blog->slug = Str::slug($request->get('title'));
-        $blog->users_id = Auth::id();
-        $blog->tags_id = $request->get('tags_id');
+        $blog->users_id = 1;
         $blog->categories_id = $request->get('categories_id');
 
         //cek apakah ada file di dalam post
@@ -189,23 +196,34 @@ class BlogController extends Controller
 
         foreach ($images as $k => $img) {
             $image_64 = $img->getAttribute('src');
-            $extension = explode('/',explode(':', substr($image_64, 0, strpos($image_64, ';')))[1])[1];
-            $replace = substr($image_64, 0, strpos($image_64, ',')+1);
-            $image = str_replace($replace,'',$image_64);
-            $image = str_replace(' ','+',$image);
-            $imageName = Str::random(10).'.'.$extension;
 
-            Storage::disk('public')->put('blogs/'.$imageName, base64_decode($image));
+            if (substr($image_64, 0,5) == 'data:'){
+                $extension = explode('/',explode(':', substr($image_64, 0, strpos($image_64, ';')))[1])[1];
+                $replace = substr($image_64, 0, strpos($image_64, ',')+1);
+                $image = str_replace($replace,'',$image_64);
+                $image = str_replace(' ','+',$image);
+                $imageName = Str::random(10).'.'.$extension;
 
-            $img->removeAttribute('src');
-            $src_path = asset('storage/blogs/'.$imageName);
-            $img->setAttribute('src',$src_path);
+                Storage::disk('public')->put('blogs/'.$imageName, base64_decode($image));
+
+                $img->removeAttribute('src');
+                $src_path = asset('storage/blogs/'.$imageName);
+                $img->setAttribute('src',$src_path);
+            }
         }
 
         $konten = $dom->saveHTML();
         $blog->content = $konten;
 
         $blog->save();
+
+        $tagIds = [];
+        foreach($request->get('tags_id') as $tag)
+        {
+            $tagIds[] = $tag;
+        }
+        $blog->tags()->sync($tagIds);
+
         
         return redirect()->route('blog.index')->with('success','success');
     }   

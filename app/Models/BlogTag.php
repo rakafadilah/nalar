@@ -9,7 +9,7 @@ class BlogTag extends Model
 {
     use HasFactory;
 
-    protected $table = 'blog_tags';
+    protected $table = 'blog_tag';
     public $timestamps =true;
     protected $fillable =[
         'tag_id','blog_id'
