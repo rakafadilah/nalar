@@ -13,19 +13,19 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/front', function () {
-    return view('frontend.dashboard.index');
-});
+Route::get('/', 'App\Http\Controllers\front\PageController@index')->name('home');
 
-Route::get('/blogs',function () {
-    return view('frontend.blog.index');
-});
+// cara membuat route get untuk halaman utama dan memakai name untuk inisial route
+Route::get('/class', 'App\Http\Controllers\front\PageController@indexClass')->name('class.index');
+Route::get('/program', 'App\Http\Controllers\front\PageController@indexProgram')->name('program.index');
+Route::get('/opini', 'App\Http\Controllers\front\PageController@indexOpini')->name('opini.index');
+Route::get('/corner', 'App\Http\Controllers\front\PageController@indexCorner')->name('corner.index');
 
 Route::get('/blogpost', function ()  {
     return view('frontend.blog.post');
 });
 
-Route::get('/', function () {
+Route::get('/admin-panel', function () {
     return view('dashboard.index');
 });
 

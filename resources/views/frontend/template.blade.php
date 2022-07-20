@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="shortcut icon" href="{{asset('frontend/img/favicon.png')}}">
+  <link rel="shortcut icon" href="{{asset('img/nalar-logo.png')}}">
   <title>Nalar-Tv</title>
   <link rel="stylesheet" href="{{asset('frontend/css/plugins.css')}}">
   <link rel="stylesheet" href="{{asset('frontend/css/style.css')}}">

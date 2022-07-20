@@ -9,8 +9,8 @@
     <meta name="description" content="">
     <meta name="author" content="">
     <!-- Favicon icon -->
-    <link rel="icon" type="image/png" sizes="16x16" href="{{asset('backend/assets/images/favicon.png')}}">
-    <title>Nalar TV</title>
+    <link rel="icon" type="image/png" sizes="16x16" href="{{asset('img/nalar-logo.png')}}">
+    <title>Nalar TV - admin panel</title>
     <!-- Custom CSS -->
     <link href="{{asset('backend/assets/extra-libs/c3/c3.min.css')}}" rel="stylesheet">
     <link href="{{asset('backend/assets/libs/chartist/dist/chartist.min.css')}}" rel="stylesheet">
