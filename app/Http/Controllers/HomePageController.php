@@ -2,15 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Categories;
-use App\Models\FrontPage;
-use Facade\FlareClient\Stacktrace\Frame;
+use App\Models\Homepage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
-use PhpParser\NodeVisitor\FindingVisitor;
 
-class FrontPageController extends Controller
+class HomePageController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -19,9 +16,9 @@ class FrontPageController extends Controller
      */
     public function index()
     {
-        $pages = FrontPage::all();
-        return view('pages.index', [
-            'pages' => $pages,
+        $homes = Homepage::all(); 
+        return view('home.index', [
+            'homes' => $homes,
         ]);
     }
 
@@ -32,10 +29,7 @@ class FrontPageController extends Controller
      */
     public function create()
     {
-        $categories = Categories::all();
-        return view('pages.create',[
-            'categories' => $categories,
-        ]);
+        return view('home.create');
     }
 
     /**
@@ -46,29 +40,28 @@ class FrontPageController extends Controller
      */
     public function store(Request $request)
     {
-        //
         $validation = Validator::make($request->all(),[
             "title"=> "required",
-            "subtitle"=> "required",
             "image"=>"sometimes|image",
-            "categories_id"=>"required",
         ])->validate();
 
-        $pages = new FrontPage() ;
-        $pages->title = $request->get('title');
-        $pages->subtitle = $request->get('subtitle');
-        $pages->categories_id = $request->get('categories_id');
+        $homes =new Homepage() ;
+        $homes->title = $request->get('title');
+        $homes->subtitle = $request->get('subtitle');
+        $homes->title1 = $request->get('title1');
+        $homes->subtitle1 = $request->get('subtitle1');
+        $homes->title2 = $request->get('title2');
+        $homes->subtitle2 = $request->get('subtitle2');
+        $homes->title3 = $request->get('title3');
+        $homes->subtitle3 = $request->get('subtitle3');
 
         if($request->file('image')) {
-            $file=$request->file('image')->store('frontpages','public');
-            $pages->image = $file;
+            $file=$request->file('image')->store('homes','public');
+            $homes->image = $file;
         }
 
-
-        $pages->save();
-        return redirect()->route('pages.index')->with('success','success');
-
-        
+        $homes->save();
+        return redirect()->route('home.index')->with('success','success');
     }
 
     /**
@@ -90,13 +83,10 @@ class FrontPageController extends Controller
      */
     public function edit($id)
     {
-        $pages= FrontPage::findOrFail($id);
-        $categories= Categories ::all();
+        $homes= Homepage::findOrFail($id);
 
-
-        return view('pages.edit',[
-            'pages' => $pages,
-            'categories' => $categories,
+        return view('home.edit',[
+           'homes' => $homes,
         ]);
     }
 
@@ -109,40 +99,37 @@ class FrontPageController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
         $validation = Validator::make($request->all(),[
             "title"=> "required",
-            "subtitle"=> "required",
             "image"=>"sometimes",
-            "categories_id"=>"required",
         ])->validate();
 
-        $pages = FrontPage::findOrFail($id) ;
-        $pages->title = $request->get('title');
-        $pages->subtitle = $request->get('subtitle');
-        $pages->categories_id = $request->get('categories_id');
+        $homes = Homepage::findOrFail($id);
+        $homes->title = $request->get('title');
+        $homes->subtitle = $request->get('subtitle');
+        $homes->title1 = $request->get('title1');
+        $homes->subtitle1 = $request->get('subtitle1');
+        $homes->title2 = $request->get('title2');
+        $homes->subtitle2 = $request->get('subtitle2');
+        $homes->title3 = $request->get('title3');
+        $homes->subtitle3 = $request->get('subtitle3');
 
-       
         if($request->file('image')) {
             //jika terdapat file dan di dalam data juga sudah terdapat image maka hapus yang lama di ganti yang baru
-            if($pages->image && file_exists(storage_path('app/public/'.$pages->image))) {
-                Storage::delete('public/'.$pages->image);
-                $file = $request->file('image')->store('frontpages','public');
-                $pages->image = $file;
+            if($homes->image && file_exists(storage_path('app/public/'.$homes->image))) {
+                Storage::delete('public/'.$homes->image);
+                $file = $request->file('image')->store('homes','public');
+                $homes->image = $file;
+              
             //jika tidak ada image di dalam data maka input baru image nya 
             } else {
-                $file = $request->file('image')->store('frontpages','public');
-                $pages->image = $file;
+                $file = $request->file('image')->store('homes','public');
+                $homes->image = $file;
             }
-           
         }  
 
-
-        $pages->save();
-        return redirect()->route('pages.index')->with('success','success');
-
-        
- 
+        $homes->save();
+        return redirect()->route('home.index')->with('success','success');
     }
 
     /**
@@ -153,12 +140,10 @@ class FrontPageController extends Controller
      */
     public function destroy($id)
     {
-        //
-        $pages = FrontPage::findOrFail($id);
+        $homes = Homepage::findOrFail($id);
 
-       $pages->delete();
-
-       return redirect()->route('pages.index');
-
+        $homes->delete();
+ 
+        return redirect()->route('home.index');
     }
 }

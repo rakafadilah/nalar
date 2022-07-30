@@ -2,22 +2,21 @@
 
 @section('content_front')
 <section class="wrapper bg-gray">
-    <div class="container pt-12 pt-md-16 text-center">
+    <div class="container pt-10 pt-md-10 text-center">
         <div class="row">
             <div class="col-lg-8 col-xxl-7 mx-auto text-center" data-cues="slideInDown" data-group="page-title" data-delay="600">
-                <h2 class="fs-16 text-uppercase ls-xl text-dark mb-4">Hello! This is Sandbox</h2>
-                <h1 class="display-1 fs-58 mb-7">We bring rapid solutions for your business.</h1>
-                <div class="d-flex justify-content-center" data-cues="slideInDown" data-group="page-title-buttons" data-delay="900">
-                    <span><a href="#" class="btn btn-lg btn-primary rounded-pill me-2">Explore Now</a></span>
-                    <span><a href="#" class="btn btn-lg btn-outline-primary rounded-pill">Contact Us</a></span>
-                </div>
+                <h2 class="fs-16 text-uppercase ls-xl text-dark mb-4"> {{$page->title}}</h2>
+                <h1 class="display-1 fs-58 mb-7">{{$page->subtitle}}</h1>
+            
             </div>
             <!--/column -->
         </div>
         <!-- /.row -->
     </div>
     <!-- /.container -->
-    <figure class="position-absoute" style="bottom: 0; left: 0; z-index: 2;"><img src="{{asset('frontend/img/photos/bg11.jpg')}}" alt="" /></figure>
+    <figure class="position-absoute" style="bottom: 0; left: 0; z-index: 2;">
+        <img src="{{asset('storage/'.$page->image)}}" height="50px" alt="" />
+    </figure>
 </section>
 <!-- /section -->
 
@@ -35,7 +34,7 @@
                                 @foreach ($blogs as $blog)
                                 <article class="item post col-md-6">
                                     <div class="card">
-                                        <figure class="card-img-top overlay overlay1 hover-scale"><a href="#"> <img src="{{asset('storage/'.$blog->image)}}" alt="" /></a>
+                                        <figure class="card-img-top overlay overlay1 hover-scale"><a href="{{route('article.show', $blog->slug)}}"> <img src="{{asset('storage/'.$blog->image)}}" alt="" /></a>
                                             <figcaption>
                                                 <h5 class="from-top mb-0">Read More</h5>
                                             </figcaption>
@@ -43,15 +42,16 @@
                                         <div class="card-body">
                                             <div class="post-header">
                                                 <div class="post-category text-line">
-                                                    <a href="#" class="hover" rel="category">{{$blog->categories->name}}</a>
+                                                    <a href="{{route('article.show', $blog->slug)}}" class="hover" rel="category">{{$blog->categories->name}}</a>
                                                 </div>
                                                 <!-- /.post-category -->
-                                                <h2 class="post-title h3 mt-1 mb-3"><a class="link-dark" href="blog-post.html">{{$blog->title}}</a></h2>
+                                                <h2 class="post-title h3 mt-1 mb-3"><a class="link-dark" href="{{route('article.show', $blog->slug)}}">{{$blog->title}}</a></h2>
                                             </div>
                                             <!-- /.post-header -->
                                             <div class="post-content">
                                                 <!-- cara menampikan data teks dengan escape string dan limit string ke 100 -->
-                                                {!! \Illuminate\Support\Str::limit($blog->content, 100, $end='...')  !!}
+                                                {!! \Illuminate\Support\Str::limit(strip_tags($blog->content), 100, $end='...')  !!}
+
                                             </div>
                                             <!-- /.post-content -->
                                         </div>

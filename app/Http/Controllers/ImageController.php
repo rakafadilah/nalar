@@ -2,15 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Categories;
-use App\Models\FrontPage;
-use Facade\FlareClient\Stacktrace\Frame;
+use App\Models\Image;
+use Facade\FlareClient\View;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
-use PhpParser\NodeVisitor\FindingVisitor;
 
-class FrontPageController extends Controller
+class ImageController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -18,11 +16,11 @@ class FrontPageController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index()
-    {
-        $pages = FrontPage::all();
-        return view('pages.index', [
-            'pages' => $pages,
-        ]);
+    { 
+            $images = Image::all(); 
+            return view('image.index', [
+                'images' => $images
+            ]);
     }
 
     /**
@@ -32,10 +30,7 @@ class FrontPageController extends Controller
      */
     public function create()
     {
-        $categories = Categories::all();
-        return view('pages.create',[
-            'categories' => $categories,
-        ]);
+        return View('image.create');
     }
 
     /**
@@ -46,29 +41,21 @@ class FrontPageController extends Controller
      */
     public function store(Request $request)
     {
-        //
         $validation = Validator::make($request->all(),[
             "title"=> "required",
-            "subtitle"=> "required",
             "image"=>"sometimes|image",
-            "categories_id"=>"required",
         ])->validate();
 
-        $pages = new FrontPage() ;
-        $pages->title = $request->get('title');
-        $pages->subtitle = $request->get('subtitle');
-        $pages->categories_id = $request->get('categories_id');
+        $image =new Image() ;
+        $image->title = $request->get('title');
 
         if($request->file('image')) {
-            $file=$request->file('image')->store('frontpages','public');
-            $pages->image = $file;
+            $file=$request->file('image')->store('image','public');
+            $image->image = $file;
         }
 
-
-        $pages->save();
-        return redirect()->route('pages.index')->with('success','success');
-
-        
+        $image->save();
+        return redirect()->route('image.index')->with('success','success');
     }
 
     /**
@@ -90,13 +77,10 @@ class FrontPageController extends Controller
      */
     public function edit($id)
     {
-        $pages= FrontPage::findOrFail($id);
-        $categories= Categories ::all();
+        $image= Image::findOrFail($id);
 
-
-        return view('pages.edit',[
-            'pages' => $pages,
-            'categories' => $categories,
+        return view('image.edit',[
+           'image' => $image,
         ]);
     }
 
@@ -109,40 +93,32 @@ class FrontPageController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
         $validation = Validator::make($request->all(),[
             "title"=> "required",
-            "subtitle"=> "required",
             "image"=>"sometimes",
-            "categories_id"=>"required",
         ])->validate();
 
-        $pages = FrontPage::findOrFail($id) ;
-        $pages->title = $request->get('title');
-        $pages->subtitle = $request->get('subtitle');
-        $pages->categories_id = $request->get('categories_id');
+        $image = Image::findOrFail($id) ;
+        $image->title = $request->get('title');
 
        
         if($request->file('image')) {
             //jika terdapat file dan di dalam data juga sudah terdapat image maka hapus yang lama di ganti yang baru
-            if($pages->image && file_exists(storage_path('app/public/'.$pages->image))) {
-                Storage::delete('public/'.$pages->image);
-                $file = $request->file('image')->store('frontpages','public');
-                $pages->image = $file;
+            if($image->image && file_exists(storage_path('app/public/'.$image->image))) {
+                Storage::delete('public/'.$image->image);
+                $file = $request->file('image')->store('image','public');
+                $image->image = $file;
+              
             //jika tidak ada image di dalam data maka input baru image nya 
             } else {
-                $file = $request->file('image')->store('frontpages','public');
-                $pages->image = $file;
+                $file = $request->file('image')->store('image','public');
+                $image->image = $file;
             }
-           
         }  
 
-
-        $pages->save();
-        return redirect()->route('pages.index')->with('success','success');
-
-        
- 
+        $image->save();
+        return redirect()->route('image.index')->with('success','success');
+           
     }
 
     /**
@@ -153,12 +129,10 @@ class FrontPageController extends Controller
      */
     public function destroy($id)
     {
-        //
-        $pages = FrontPage::findOrFail($id);
+        $image = Image::findOrFail($id);
 
-       $pages->delete();
+       $image->delete();
 
-       return redirect()->route('pages.index');
-
+       return redirect()->route('image.index');
     }
 }

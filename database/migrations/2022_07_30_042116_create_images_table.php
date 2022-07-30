@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateFrontPagesTable extends Migration
+class CreateImagesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,16 +13,11 @@ class CreateFrontPagesTable extends Migration
      */
     public function up()
     {
-        Schema::create('front_pages', function (Blueprint $table) {
+        Schema::create('images', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
             $table->string('title')->nullable();
-            $table->string('subtitle')->nullable();
-            $table->string('image')->nullable();
-
-
-            $table->foreignId('categories_id')->unsigned()->index()->constrained()->cascadeOnDelete()->cascadeOnUpdate();
-
+            $table->string('image');
         });
     }
 
@@ -33,6 +28,6 @@ class CreateFrontPagesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('front_pages');
+        Schema::dropIfExists('images');
     }
 }
