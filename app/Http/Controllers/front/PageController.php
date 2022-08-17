@@ -38,7 +38,7 @@ class PageController extends Controller
         $blogs = Blog::whereHas('categories', function($q) {
             $q->where('name', 'class');
         })->paginate(10);
-        
+
         $page = FrontPage::whereHas('categories', function($q) {
             $q->where('name', 'class');
         })->first();
@@ -101,10 +101,17 @@ class PageController extends Controller
 
     public function show($slug) {
         $article = Blog::where('slug', $slug)->first();
-       
+
+        $relates = Blog::where('categories_id', $article->categories_id)->whereNotIn('id', [$article->id])->inRandomOrder()->limit(4)->get();  
+        
+        $link = \Share::currentPage()->whatsapp()->facebook()->linkedin()->twitter()->getRawLinks();
+        
 
         return view('frontend.blog.post',[
             'article' => $article,
+            'relates' => $relates,
+            'link' => $link,
+            
         ]);
 
     }

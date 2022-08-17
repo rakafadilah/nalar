@@ -40,9 +40,29 @@
                                     {!! $article->content !!}
                                 </article>
                                 <!-- /.post -->
+                                <div class="post-footer d-md-flex flex-md-row justify-content-md-between align-items-center mt-8">
+                                    <div>
+                                        <ul class="list-unstyled tag-list mb-0">
+                                            <li><a href="#" class="btn btn-soft-ash btn-sm rounded-pill mb-0">{{$article->categories->name}}</a></li>
+                                        </ul>
+                                    </div>
+                                    <div class="mb-0 mb-md-2">
+                                        <div class="dropdown share-dropdown btn-group">
+                                            <button class="btn btn-sm btn-red rounded-pill btn-icon btn-icon-start dropdown-toggle mb-0 me-0" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                <i class="uil uil-share-alt"></i> Share </button>
+                                            <div class="dropdown-menu">
+                                                <a class="dropdown-item" href="{{$link['twitter']}}" target="_blank"><i class="uil uil-twitter"></i>Twitter</a>
+                                                <a class="dropdown-item" href="{{$link['facebook']}}" target="_blank"><i class="uil uil-facebook-f"></i>Facebook</a>
+                                                <a class="dropdown-item" href="{{$link['whatsapp']}}" target="_blank"><i class="uil uil-whatsapp"></i>Whatsapp</a>
+                                            </div>
+                                            <!--/.dropdown-menu -->
+                                        </div>
+                                        <!--/.share-dropdown -->
+                                    </div>
+                                </div>
                             </div>
                             <!-- /.classic-view -->
-                            <hr />
+                           
                            
                             <!-- /.author-info -->
                             
@@ -50,25 +70,25 @@
                             <hr />
                             <h3 class="mb-6">You Might Also Like</h3>
                             <div class="carousel owl-carousel blog grid-view mb-16" data-margin="30" data-dots="true" data-autoplay="false" data-autoplay-timeout="5000" data-responsive='{"0":{"items": "1"}, "768":{"items": "2"}, "992":{"items": "2"}, "1200":{"items": "2"}}'>
+                                @foreach($relates as $key => $relate)
                                 <div class="item">
                                     <article>
-                                        <figure class="overlay overlay1 hover-scale rounded mb-5"><a href="#"> <img src="{{asset('frontend/img/photos/b4.jpg')}}" alt="" /></a>
+                                        <figure class="overlay overlay1 hover-scale rounded mb-5"><a href="{{route('article.show', $relate->slug)}}"> <img src="{{asset('storage/'.$relate->image)}}" alt="" /></a>
                                             <figcaption>
                                                 <h5 class="from-top mb-0">Read More</h5>
                                             </figcaption>
                                         </figure>
                                         <div class="post-header">
                                             <div class="post-category text-line">
-                                                <a href="#" class="hover" rel="category">Coding</a>
+                                                <a href="{{route('article.show', $relate->slug)}}" class="hover" rel="category">{{$relate->categories->name}}</a>
                                             </div>
                                             <!-- /.post-category -->
-                                            <h2 class="post-title h3 mt-1 mb-3"><a class="link-dark" href="blog-post.html">Ligula tristique quis risus</a></h2>
+                                            <h2 class="post-title h3 mt-1 mb-3"><a class="link-dark" href="{{route('article.show', $relate->slug)}}">{{$relate->title}}</a></h2>
                                         </div>
                                         <!-- /.post-header -->
                                         <div class="post-footer">
                                             <ul class="post-meta mb-0">
-                                                <li class="post-date"><i class="uil uil-calendar-alt"></i><span>14 Apr 2021</span></li>
-                                                <li class="post-comments"><a href="#"><i class="uil uil-comment"></i>4</a></li>
+                                                <li class="post-date"><i class="uil uil-calendar-alt"></i><span>{{$relate->created_at->format('d M Y')}}</span></li>
                                             </ul>
                                             <!-- /.post-meta -->
                                         </div>
@@ -76,90 +96,12 @@
                                     </article>
                                     <!-- /article -->
                                 </div>
+                                @endforeach
                                 <!-- /.item -->
-                                <div class="item">
-                                    <article>
-                                        <figure class="overlay overlay1 hover-scale rounded mb-5"><a href="#"> <img src="{{asset('frontend/img/photos/b5.jpg')}}" alt="" /></a>
-                                            <figcaption>
-                                                <h5 class="from-top mb-0">Read More</h5>
-                                            </figcaption>
-                                        </figure>
-                                        <div class="post-header">
-                                            <div class="post-category text-line">
-                                                <a href="#" class="hover" rel="category">Workspace</a>
-                                            </div>
-                                            <!-- /.post-category -->
-                                            <h2 class="post-title h3 mt-1 mb-3"><a class="link-dark" href="blog-post.html">Nullam id dolor elit id nibh</a></h2>
-                                        </div>
-                                        <!-- /.post-header -->
-                                        <div class="post-footer">
-                                            <ul class="post-meta mb-0">
-                                                <li class="post-date"><i class="uil uil-calendar-alt"></i><span>29 Mar 2021</span></li>
-                                                <li class="post-comments"><a href="#"><i class="uil uil-comment"></i>3</a></li>
-                                            </ul>
-                                            <!-- /.post-meta -->
-                                        </div>
-                                        <!-- /.post-footer -->
-                                    </article>
-                                    <!-- /article -->
-                                </div>
-                                <!-- /.item -->
-                                <div class="item">
-                                    <article>
-                                        <figure class="overlay overlay1 hover-scale rounded mb-5"><a href="#"> <img src="{{asset('frontend/img/photos/b6.jpg')}}" alt="" /></a>
-                                            <figcaption>
-                                                <h5 class="from-top mb-0">Read More</h5>
-                                            </figcaption>
-                                        </figure>
-                                        <div class="post-header">
-                                            <div class="post-category text-line">
-                                                <a href="#" class="hover" rel="category">Meeting</a>
-                                            </div>
-                                            <!-- /.post-category -->
-                                            <h2 class="post-title h3 mt-1 mb-3"><a class="link-dark" href="blog-post.html">Ultricies fusce porta elit</a></h2>
-                                        </div>
-                                        <!-- /.post-header -->
-                                        <div class="post-footer">
-                                            <ul class="post-meta mb-0">
-                                                <li class="post-date"><i class="uil uil-calendar-alt"></i><span>26 Feb 2021</span></li>
-                                                <li class="post-comments"><a href="#"><i class="uil uil-comment"></i>6</a></li>
-                                            </ul>
-                                            <!-- /.post-meta -->
-                                        </div>
-                                        <!-- /.post-footer -->
-                                    </article>
-                                    <!-- /article -->
-                                </div>
-                                <!-- /.item -->
-                                <div class="item">
-                                    <article>
-                                        <figure class="overlay overlay1 hover-scale rounded mb-5"><a href="#"> <img src="{{asset('frontend/img/photos/b7.jpg')}}" alt="" /></a>
-                                            <figcaption>
-                                                <h5 class="from-top mb-0">Read More</h5>
-                                            </figcaption>
-                                        </figure>
-                                        <div class="post-header">
-                                            <div class="post-category text-line">
-                                                <a href="#" class="hover" rel="category">Business Tips</a>
-                                            </div>
-                                            <!-- /.post-category -->
-                                            <h2 class="post-title h3 mt-1 mb-3"><a class="link-dark" href="blog-post.html">Morbi leo risus porta eget</a></h2>
-                                        </div>
-                                        <div class="post-footer">
-                                            <ul class="post-meta mb-0">
-                                                <li class="post-date"><i class="uil uil-calendar-alt"></i><span>7 Jan 2021</span></li>
-                                                <li class="post-comments"><a href="#"><i class="uil uil-comment"></i>2</a></li>
-                                            </ul>
-                                            <!-- /.post-meta -->
-                                        </div>
-                                        <!-- /.post-footer -->
-                                    </article>
-                                    <!-- /article -->
-                                </div>
-                                <!-- /.item -->
+                                
                             </div>
                             <!-- /.owl-carousel -->
-                            <hr />
+                            
 
                         </div>
                         <!-- /.card-body -->

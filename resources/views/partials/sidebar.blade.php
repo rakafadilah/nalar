@@ -28,7 +28,7 @@
                     </a>
                 </li>
                 <li class="sidebar-item">
-                    <a href="{{route('blog.index')}}" class="sidebar-link">
+                        <a href="{{route('blog.index')}}" class="sidebar-link">
                         <i data-feather="file-text" class="feather-icon"></i>
                         <span class="hide-menu"> Post
                         </span>
@@ -50,7 +50,7 @@
                         <span class="hide-menu"> Ads
                         </span>
                     </a>
-                </li>
+                </li>   
                 <li class="sidebar-item">
                     <a href="{{route('home.index')}}" class="sidebar-link">
                         <i data-feather="file-text" class="feather-icon"></i>

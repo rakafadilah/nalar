@@ -63,7 +63,7 @@ class BlogController extends Controller
         $blog = new Blog ;
         $blog->title = $request->get('title');
         $blog->slug = Str::slug($request->get('title'));
-        $blog->users_id = 1;
+        $blog->users_id = Auth::id();
         $blog->categories_id = $request->get('categories_id');
 
         // $blog->tags_id = $request->get('tags_id');
@@ -171,7 +171,7 @@ class BlogController extends Controller
         $blog= Blog ::findOrFail($id);
         $blog->title = $request->get('title');
         $blog->slug = Str::slug($request->get('title'));
-        $blog->users_id = 1;
+        $blog->users_id = Auth::id();
         $blog->categories_id = $request->get('categories_id');
 
         //cek apakah ada file di dalam post
