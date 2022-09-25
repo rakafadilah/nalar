@@ -19,8 +19,8 @@
                 </li>
                 <li class="nav-item "><a class="nav-link" href="{{route('corner.index')}}">Corner</a>
                 </li>
-                <li class="nav-item"><a class="nav-link" href="elements.html">Contact</a>
-                </li>
+                <!-- <li class="nav-item"><a class="nav-link" href="elements.html">Contact</a>
+                </li> -->
               </ul>
               <!-- /.navbar-nav -->
             </div>
